@@ -5,16 +5,18 @@ import logic.portfolioEffect as portfolioEffect
 #TODO: if parsers find new material, implement logic analysis
 
 def main():
-    print(portfolioEffectAnalysis)
+    output = portfolioEffectAnalysis()
+    print("Portfolio Effect Analysis Output:")
+    print(output)
 
 def portfolioEffectAnalysis():
     portfolio = "AAPL, MSFT, GOOGL"  # Example portfolio
     newsTitle = "Apple Releases New iPhone"
-    newsSubhead = "The latest model features advanced technology."
     newsContent = "Apple has announced the release of its latest iPhone model, which includes several new features and improvements over previous versions..."
     
-    return portfolioEffect(newsTitle, newsSubhead, newsContent, portfolio)
+    return portfolioEffect.portfolioAnalysis(newsTitle, newsContent, portfolio)
     
 if __name__ == "__main__":
+    print("NOVA")
     main()
     
