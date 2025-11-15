@@ -18,17 +18,17 @@ def portfolioAnalysis(newsTitle, newsSubhead, newsContent, portfolio):
         model="gemini-2.5-pro",
         contents=f'''[SYSTEM PROMPT]Your sole purpose is to read news article information we provide you and generate the likelihood of portfolio affect as well as the sentiment. You will be provided with news article titles and text content. Provide a format as listed below with no other output.[END SYSTEM PROMPT]
         [PORTFOLIO] {portfolio} [END PORTFOLIO]
-        [NEWS ARTICLE TITLE] [END NEWS ARTICLE TITLE]
-        [NEWS ARTICLE CONTENT] [END NEWS ARTICLE CONTENT]
+        [NEWS ARTICLE TITLE] {newsTitle} [END NEWS ARTICLE TITLE]
+        [NEWS ARTICLE CONTENT] {newsContent} [END NEWS ARTICLE CONTENT]
         
         [OUTPUT FORMAT]
         "<stock_1_ticker>":{
-            "likelihood": <float 0(no effect) - 1(direct effect)>,
-            "sentiment": <float -1(very negative) - 1(very positive)>
+            "likelihood": '<float 0(no effect) - 1(direct effect)>,
+            "sentiment": '<float -1(very negative) - 1(very positive)>
         },
         "<stock_2_ticker>":{
-            "likelihood": <float 0(no effect) - 1(direct effect)>,
-            "sentiment": <float -1(very negative) - 1(very positive)>
+            "likelihood": '<float 0(no effect) - 1(direct effect)>,
+            "sentiment": '<float -1(very negative) - 1(very positive)>
         },
         ...
         [END OUTPUT FORMAT]''',
