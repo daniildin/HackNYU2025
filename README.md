@@ -4,27 +4,27 @@
 
 ### Developer Details
 To activate the virtual environment and download the dependecnies, run the following commands in the terminal:
-'''bash
+```bash
 python -m venv venv
-'''
+```
 
 (activating the venv for Windows):
-'''bash
+```bash
 venv\Scripts\activate
-'''
+```
 
 (for Mac):
-'''bash
+```bash
 source venv/bin/activate
-'''
+```
 
 installing dependencies:
-'''bash
+```bash
 pip install -r requirements.txt
-'''
+```
 
 
 To update the dependencies with new libraries, write to requirements.txt with the following:
-'''bash
+```bash
 pip freeze > requirements.txt
-'''
+```
