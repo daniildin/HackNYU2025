@@ -1,6 +1,7 @@
-# HackNYU2025
+# HackNYU2025 - NOVA
 
-[name tbd] is a news analysis tool for tracking your trade portfolio as global events happen in real time. Simply enter your portfolio and our daemon runs in the background to analyze what is happening in the world and best warn you of any trends!
+Nova is a news analysis tool for tracking your trade portfolio as global events happen in real time. Simply enter your portfolio and our daemon runs in the background to analyze what is happening in the world and best warn you of any trends!
+Nova is 100% human written as well. When it comes to finance, we believe human development and inginuity is a necessity!
 
 ### Developer Details
 To activate the virtual environment and download the dependecnies, run the following commands in the terminal:
