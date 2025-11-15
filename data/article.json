@@ -1,0 +1,56 @@
+{
+    "FOX": {
+        "headline": "FOX placeholder",
+        "subheader": "FOX placeholder subheader",
+        "date": "placeholder date",
+        "writers": [
+            "placeholder"
+        ],
+        "content": "placeholder content"
+    },
+    "APNEWS": {
+        "headline": "AP placeholder",
+        "subheader": "AP placeholder subheader",
+        "date": "placeholder date",
+        "writers": [
+            "placeholder"
+        ],
+        "content": "placeholder content"
+    },
+    "BBC": {
+        "headline": "BBC placeholder",
+        "subheader": "BBC placeholder subheader",
+        "date": "placeholder date",
+        "writers": [
+            "placeholder"
+        ],
+        "content": "placeholder content"
+    },
+    "CNN": {
+        "headline": "CNN placeholder",
+        "subheader": "CNN placeholder subheader",
+        "date": "placeholder date",
+        "writers": [
+            "placeholder"
+        ],
+        "content": "placeholder content"
+    },
+    "MARKETWATCH": {
+        "headline": "MarketWatch placeholder",
+        "subheader": "MarketWatch placeholder subheader",
+        "date": "placeholder date",
+        "writers": [
+            "placeholder"
+        ],
+        "content": "placeholder content"
+    },
+    "CNBC": {
+        "headline": "CNBC placeholder",
+        "subheader": "CNBC placeholder subheader",
+        "date": "placeholder date",
+        "writers": [
+            "placeholder"
+        ],
+        "content": "placeholder content"
+    }
+}
