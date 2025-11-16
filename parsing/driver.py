@@ -12,13 +12,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 # can just call get_driver() and not worry about the setup details.
 
 def get_driver():
-    # Set up browser options
+    
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new")  
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--window-size=1920,1080")
 
-    # Create a Chrome browser that Selenium can control
+
     driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()),
         options=options
