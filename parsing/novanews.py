@@ -1,7 +1,8 @@
 from selenium.webdriver.common.by import By
-from .driver import get_driver
+from driver import get_driver
 import time
 import json
+import logic.bucketParser as bucketParser
 
 def scrape():
     driver = get_driver()
@@ -30,16 +31,6 @@ def scrape():
         content = "N/A"
 
     driver.quit()
-
-    # Normalize everything into a dict so the rest of the pipeline doesn't
-    # care where it came from (NovaNews vs CNBC, etc.).
-    return {
-        "headline": meta.get("title", ""),
-        "subheader": "",
-        "date": meta.get("date", ""),
-        "publisher": meta.get("publisher", ""),
-        "writers": [meta.get("editors", "")],
-        "tickers": meta.get("tickers", ""),
-        "sentiment": meta.get("sentiment", ""),
-        "content": content,
-    }
+    
+    #check if content has already been written to backlog
+    return bucketParser.bucketParser(meta)

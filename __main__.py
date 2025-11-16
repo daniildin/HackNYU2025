@@ -40,9 +40,10 @@ def main():
     #welcome.main()
     config()
     
-    #sleep loop
-    schedule.every(10).seconds.do(parsing.novanews.scrape)
-    schedule.every(1).hours.do(parsing.cnbc.scrape)
+    #schedule loop
+    newNova, newCNBC = False, False
+    schedule.every(10).seconds.do(parsing.novanews.scrape, newNova=newNova)
+    schedule.every(1).hours.do(parsing.cnbc.scrape, newNova=newCNBC)
     
     print("Portfolio Effect Analysis Output:")
     print(portfolioEffectAnalysis())
