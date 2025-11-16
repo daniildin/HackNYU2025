@@ -1,19 +1,23 @@
-#Scraping the data from news articles, collecting libraries
+"""
+scraper.py
+Runs all individual scrapers and saves their output as JSON.
+"""
+
 import json
 from .cnbc import scrape as scrape_cnbc
+# from .novanews import scrape as scrape_nova
 
-#Final function to run all subscrape_news functions 
 def run_all():
     return {
         "CNBC": scrape_cnbc(),
+        # "NovaNews": scrape_nova()
     }
 
 if __name__ == "__main__":
     articles = run_all()
 
-    #For Connor -> save to JSON file, no strings
-    with open("../data/article.json", "w") as f:
-        json.dump(articles, f, indent = 4)
+    # Save the combined results for Connor
+    with open("data/articles.json", "w") as f:
+        json.dump(articles, f, indent=4)
 
-    print("Scraping complete. See output in data/article.json")
-
+    print("Scraping complete. Saved → data/articles.json")
