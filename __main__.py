@@ -48,46 +48,10 @@ def main() -> None:
 
 
 def portfolioEffectAnalysis():
-    """Glue function that connects scraping to the Gemini analysis.
-
-    1.Pick a portfolio (user input if available, otherwise a default sample).
-    2.Run all scrapers to grab the latest articles.
-    3.Decide which articles to send to the model.
-    4.Call the Gemini-based portfolioEffect function and return its response.
-    """
-    # If the user gave us a portfolio, use that; otherwise fall back to a basic one.
-    if PORTFOLIO_GLOBAL:
-        portfolio = ", ".join(PORTFOLIO_GLOBAL)
-    else:
-        portfolio = "AAPL, MSFT, GOOGL"  # simple default portfolio
-
-    # Scrape latest articles from our sources.
-    articles = run_all()
-
-
-    nova_article = articles.get("NovaNews") if isinstance(articles, dict) else None
-    cnbc_article = articles.get("CNBC") if isinstance(articles, dict) else None
-
-    if nova_article and cnbc_article:
-        # If both scrapers succeed, merge their info into one combined input.
-        newsTitle = f"{nova_article.get('headline', 'NovaNews')} & {cnbc_article.get('headline', 'CNBC')}"
-        newsContent = (
-            f"NovaNews: {nova_article.get('content', '')}\n\n"
-            f"CNBC: {cnbc_article.get('content', '')}"
-        )
-    elif nova_article or cnbc_article:
-        # If only one article exists, just use that one.
-        article = nova_article or cnbc_article
-        newsTitle = article.get("headline", "Latest Market News")
-        newsContent = article.get("content", "")
-    else:
-        newsTitle = "Apple Releases New iPhone"
-        newsContent = (
-            "Apple has announced the release of its latest iPhone model, which includes "
-            "several new features and improvements over previous versions..."
-        )
-
-    # Send the final text to the Gemini-based analysis function.
+    portfolio = "AAPL, MSFT, GOOGL"
+    newsTitle = "Apple Releases New iPhone"
+    newsContent = "Apple has announced the release of its latest iPhone model, which includes several new features and improvements over previous versions..."
+    
     return portfolioEffect.portfolioAnalysis(newsTitle, newsContent, portfolio)
 
 
