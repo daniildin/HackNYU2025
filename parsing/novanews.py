@@ -33,11 +33,5 @@ def scrape():
 
     driver.quit()
 
-    # attach content to meta so callers get full article
-    meta["content"] = content
-
-    # check / update backlog, but ignore its boolean return for scraping
-    bucketParser.bucketParser(meta)
-
-    # return the full article dict for downstream logic
-    return meta
+    #check if content has already been written to backlog
+    return bucketParser.bucketParser(meta)

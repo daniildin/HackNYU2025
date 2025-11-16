@@ -4,24 +4,5 @@
     "hello": {
         "hi": "there",
         "greetings": "salutations"
-    },
-    "null": {
-        "slug": "nvda-palantir-deal",
-        "title": "NVIDIA x Palantir announce strategic AI partnership",
-        "date": "11-15-2025",
-        "publisher": "Fahmy Macro Wire",
-        "editors": "Sarah Lin, Omar Reyes",
-        "tickers": "NVDA, PAL",
-        "sentiment": "NVDA 0.82, PAL 0.91"
-    },
-    "null": {
-        "slug": "nvda-palantir-deal",
-        "title": "NVIDIA x Palantir announce strategic AI partnership",
-        "date": "11-15-2025",
-        "publisher": "Fahmy Macro Wire",
-        "editors": "Sarah Lin, Omar Reyes",
-        "tickers": "NVDA, PAL",
-        "sentiment": "NVDA 0.82, PAL 0.91",
-        "content": "NVIDIA and Palantir today announced a deeper expansion of their existing collaboration around enterprise-scale artificial intelligence.\nThe partnership integrates NVIDIA\u2019s accelerated computing stack with Palantir\u2019s AIP (Artificial Intelligence Platform), enabling customers to deploy advanced AI workloads across defense, healthcare, finance, and public-sector operations.\nFor investors, the key question is whether this deal leads to:\nEarly sell-side commentary frames the news as a moderately positive catalyst for both NVDA and PAL, with upside skewed toward longer-duration enterprise AI contracts rather than immediate revenue spikes."
     }
 }
