@@ -2,12 +2,22 @@ import json
 import os
 
 def bucketParser(meta):
-    headline = meta.get("headline")
+    print("BUCKET PARSER \ndata:")
+    print(meta)
+    headline = meta.get("title")
     print(headline)
-    with open('.\\data\\backlog.json', "a+") as log:
-        data = json.load(log)
+    data = ''
+    try:
+        with open('backlog.json', "r+") as log:
+            data = json.load(log)
+    except FileNotFoundError:
+        print("ERROR: File not found")
+    except json.JSONDecodeError:
+        print("ERROR: failed to decode")
+    
+    print(log)
 
-    for key, value in data.items():
+    for key,value in log():
         if headline == key:
             return False
         else:
