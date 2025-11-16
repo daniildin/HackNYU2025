@@ -1,39 +1,82 @@
 import os
-from pathlib import Path
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit,
+    QPushButton, QMessageBox
+)
+from PySide6.QtGui import QFont
 
 ASCII_ART = r"""
-███╗   ██╗ ██████╗ ██╗   ██╗ █████╗
-████╗  ██║██╔═══██╗██║   ██║██╔══██╗
-██╔██╗ ██║██║   ██║██║   ██║███████║
-██║╚██╗██║██║   ██║██║   ██║██╔══██║
-██║ ╚████║╚██████╔╝╚██████╔╝██║  ██║
-╚═╝  ╚═══╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝
-        N   O   V   A
+███╗   ██╗ ██████╗ ██╗   ██╗ █████╗ 
+████╗  ██║██╔═══██╗██║   ██║██╔══██╗
+██╔██╗ ██║██║   ██║██║   ██║███████║
+██║╚██╗██║██║   ██║██║   ██║██╔══██║
+██║ ╚████║╚██████╔╝╚██████╔╝██║  ██║
+╚═╝  ╚═══╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+        N   O   V   A
 """
 
-ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
+ENV_PATH = ".env"
+
+def save_env(api_key, portfolio):
+    with open(ENV_PATH, "w") as f:
+        f.write(f"GEMINI_API_KEY={api_key}\n")
+        f.write(f"PORTFOLIO={portfolio}\n")
 
 
-def print_ascii_art():
-        print(ASCII_ART)
+def run_setup():
+    app = QApplication([])
+
+    window = QWidget()
+    window.setWindowTitle("NOVA Setup Wizard")
+    window.resize(600, 520)
+
+    layout = QVBoxLayout()
+
+    # ASCII art display
+    ascii_label = QLabel(ASCII_ART)
+    ascii_label.setFont(QFont("Courier", 11))
+    layout.addWidget(ascii_label)
+
+    # API label + input
+    api_label = QLabel("Enter your Gemini API key:")
+    api_label.setFont(QFont("Arial", 12))
+    api_input = QLineEdit()
+
+    layout.addWidget(api_label)
+    layout.addWidget(api_input)
+
+    # Portfolio label + input
+    portfolio_label = QLabel("Enter your portfolio (AAPL, MSFT, NVDA):")
+    portfolio_label.setFont(QFont("Arial", 12))
+    portfolio_input = QLineEdit()
+
+    layout.addWidget(portfolio_label)
+    layout.addWidget(portfolio_input)
+
+    # Button action
+    def save():
+        api_key = api_input.text().strip()
+        portfolio = portfolio_input.text().strip()
+
+        if not api_key or not portfolio:
+            QMessageBox.warning(window, "Error", "All fields must be filled out.")
+            return
+
+        save_env(api_key, portfolio)
+        QMessageBox.information(window, "Success", "Setup complete! .env created.")
+        window.close()
+
+    # Save button
+    save_btn = QPushButton("Save Configuration")
+    save_btn.setFont(QFont("Arial", 12))
+    save_btn.clicked.connect(save)
+
+    layout.addWidget(save_btn)
+
+    window.setLayout(layout)
+    window.show()
+    app.exec()
 
 
-def prompt_gemini_key() -> str:
-    key = input("Enter your Gemini API key: ").strip()
-    return key
-
-
-def prompt_portfolio() -> str:
-    print("Enter your portfolio tickers as a comma-separated list, e.g. 'AAPL, MSFT, NVDA':")
-    portfolio = input("Portfolio: ").strip()
-    return portfolio
-
-
-def main():
-    print_ascii_art()
-    gem_key = prompt_gemini_key()
-    portfolio = prompt_portfolio()
-    with ENV_PATH.open("w") as f:
-        f.write("GEMINI_API_KEY = '" + gem_key + "'\n" + "PORTFOLIO_TICKERS = '" + portfolio + "'")
-
-    print(f"Configuration saved to {ENV_PATH}")
+if __name__ == "__main__":
+    run_setup()
