@@ -18,21 +18,26 @@ def portfolioAnalysis(newsTitle, newsContent, portfolio):
     response = client.models.generate_content(
         model="gemini-2.5-pro",
         contents=f'''
-        [SYSTEM PROMPT]Your sole purpose is to read news article information we provide you and generate the likelihood of portfolio affect as well as the sentiment. You will be provided with news article titles and text content. Provide a format as listed below with no other output.[END SYSTEM PROMPT]
+        [SYSTEM PROMPT]Your sole purpose is to read news article information we provide you and generate the likelihood of portfolio affect as well as the sentiment. You will be provided with news article titles and text content. Provide a string that is formated as what is listed in output format with no other output, do not print json at the beginning either.[END SYSTEM PROMPT]
                 [PORTFOLIO] {portfolio} [END PORTFOLIO]
                 [NEWS ARTICLE TITLE] {newsTitle} [END NEWS ARTICLE TITLE]
                 [NEWS ARTICLE CONTENT] {newsContent} [END NEWS ARTICLE CONTENT]
                 
-                [OUTPUT FORMAT (in JSON)]
-                "'stock_1_ticker'":{{
-                    "likelihood": 'float from 0(no effect) to 1(direct effect)',
-                    "sentiment": 'float -1(very negative) - 1(very positive)'
-                }},
-                "'stock_2_ticker'":{{
-                    "likelihood": 'float 0(no effect) - 1(direct effect)',
-                    "sentiment": 'float -1(very negative) - 1(very positive)'
-                }},
-                ...
+                [OUTPUT FORMAT]
+                "'One sentence article description'"{{
+                    "'date'": 'YYYY-MM-DD',
+                    "'portfolioEffect'":{{
+                        "'stock_1_ticker'":{{
+                            "likelihood": 'float from 0(no effect) to 1(direct effect)',
+                            "sentiment": 'float -1(very negative) - 1(very positive)'
+                        }},
+                        "'stock_2_ticker'":{{
+                            "likelihood": 'float 0(no effect) - 1(direct effect)',
+                            "sentiment": 'float -1(very negative) - 1(very positive)'
+                        }},
+                        ...
+                    }}
+                }}
                 [END OUTPUT FORMAT]
         '''
     )

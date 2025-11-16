@@ -10,7 +10,7 @@ def main():
     print(output)
 
 def portfolioEffectAnalysis():
-    portfolio = "AAPL, MSFT, GOOGL"
+    portfolio = "AAPL, MSFT, GOOGL, SSNLF"
     newsTitle = "Apple Releases New iPhone"
     newsContent = "Apple has announced the release of its latest iPhone model, which includes several new features and improvements over previous versions..."
     
