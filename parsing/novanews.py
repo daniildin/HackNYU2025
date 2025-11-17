@@ -36,4 +36,14 @@ def scrape():
     print("success, now print to json")
 
     #check if content has already been written to backlog
-    return bucketParser.bucketParser(meta)
+    bucketParser.bucketParser(meta)  # keep this side-effect
+
+    # but return a normalized article dict for the rest of the app
+    return {
+        "headline": meta.get("headline") or meta.get("title") or "(Untitled)",
+        "publisher": meta.get("publisher", "Fahmy Macro Wire"),
+        "writers": meta.get("writers") or meta.get("editors") or ["Unknown"],
+        "content": content,
+        "raw_meta": meta,
+    }
+
