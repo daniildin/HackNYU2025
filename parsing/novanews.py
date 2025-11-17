@@ -6,7 +6,6 @@ import logic.bucketParser as bucketParser
 
 
 def scrape():
-    print("NOVA PARSER")
     driver = get_driver()
 
     url = "https://portfolio-news-mock.vercel.app/article.html"
@@ -33,7 +32,6 @@ def scrape():
         content = "N/A"
 
     driver.quit()
-    print("success, now print to json")
 
     #check if content has already been written to backlog
     bucketParser.bucketParser(meta)  # keep this side-effect
