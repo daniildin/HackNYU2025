@@ -77,6 +77,5 @@ def run_setup():
     window.show()
     app.exec()
 
-
-if __name__ == "__main__":
+def main():
     run_setup()
