@@ -1,21 +1,6 @@
 {
-  "java.project.sourcePaths": [
-    "src/main/java"
-  ],
-  "java.project.referencedLibraries": [
-    "build/libs/*.jar",
-    ".gradle/caches/modules-2/files-2.1/**/*.jar",
-    ".gradle/caches/jars-9/*.jar"
-  ],
-  "files.exclude": {
-    "logic/": true,
-    "backup_python/": true,
-    "__pycache__/": true
-  },
-  "search.exclude": {
-    "logic/": true,
-    "backup_python/": true,
-    "__pycache__/": true
-  },
-  "java.configuration.checkProjectSettingsExclusions": false
+    "java.project.sourcePaths": [
+        "src/main/java"
+    ],
+    "java.project.referencedLibraries": []
 }

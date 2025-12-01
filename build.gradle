@@ -1,34 +1,29 @@
 plugins {
-    id 'application'
-    id 'java'
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+	id 'java'
+	id 'application'
 }
 
 group = 'com.nova'
 version = '0.1.0'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
-    implementation 'org.jsoup:jsoup:1.16.1'
-    implementation 'org.slf4j:slf4j-simple:2.0.9'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+	implementation 'org.jsoup:jsoup:1.17.2'
 }
 
 application {
-    // main class - update if you move packages
-    mainClass = 'com.nova.App'
+	mainClass = 'com.nova.App'
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
 }
