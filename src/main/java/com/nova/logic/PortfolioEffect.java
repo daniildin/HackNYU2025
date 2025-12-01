@@ -1,23 +1,8 @@
 package com.nova.logic;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
 public class PortfolioEffect {
 	public static String analyze(String newsTitle, String publisher, String[] writers, String newsContent, String portfolio, String apiKey) {
 		return localAnalyze(newsTitle, newsContent, portfolio);
-	}
-
-	public static String analyzeViaUrl(String newsTitle, String publisher, String[] writers, String newsContent,
-	                                   String portfolio, String aiUrl, String apiKey) {
-		try {
-			String ai = callCustomAi(aiUrl, apiKey, portfolio, newsTitle, newsContent);
-			return (ai == null) ? localAnalyze(newsTitle, newsContent, portfolio) : ai.trim();
-		} catch (Exception e) {
-			return localAnalyze(newsTitle, newsContent, portfolio);
-		}
 	}
 
 	private static String localAnalyze(String title, String content, String portfolio) {
@@ -49,23 +34,6 @@ public class PortfolioEffect {
 		}
 		out.append("}");
 		return out.toString();
-	}
-
-	private static String callCustomAi(String aiUrl, String apiKey, String portfolio, String title, String content) throws Exception {
-		String body = "{"
-				+ "\"tickers\":\"" + esc(portfolio) + "\","
-				+ "\"title\":\"" + esc(title) + "\","
-				+ "\"content\":\"" + esc(content) + "\""
-				+ "}";
-
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest.Builder b = HttpRequest.newBuilder()
-				.uri(URI.create(aiUrl))
-				.header("Content-Type", "application/json")
-				.POST(HttpRequest.BodyPublishers.ofString(body));
-		if (apiKey != null && !apiKey.isBlank()) b.header("Authorization", "Bearer " + apiKey.trim());
-		HttpResponse<String> res = client.send(b.build(), HttpResponse.BodyHandlers.ofString());
-		return res.body() == null ? "" : res.body().trim();
 	}
 
 	private static String esc(String s) {

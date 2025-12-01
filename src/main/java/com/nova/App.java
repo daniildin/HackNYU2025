@@ -11,6 +11,7 @@ import com.nova.logic.Welcome;
 import com.nova.parsing.Scraper;
 
 public class App {
+        @SuppressWarnings("UseSpecificCatch")
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
@@ -20,10 +21,8 @@ public class App {
 		System.out.print("Enter API key (optional): ");
 		String apiKey = sc.nextLine().trim();
 
-		System.out.print("Enter AI endpoint URL (optional): ");
-		String aiUrl = sc.nextLine().trim();
-
-		try { Welcome.saveEnv(apiKey, portfolio, aiUrl); } catch (Exception ignored) {}
+		// Save .env for next run (API key + tickers only)
+		try { Welcome.saveEnv(apiKey, portfolio); } catch (Exception ignored) {}
 
 		System.out.println("Fetching...");
 		Map<String, Map<String, String>> articles = Scraper.runAll();
@@ -34,9 +33,7 @@ public class App {
 		String title = nova.get("headline") + " / " + cnbc.get("headline");
 		String content = nova.get("content") + "\n\n" + cnbc.get("content");
 
-		String json = (aiUrl != null && !aiUrl.isBlank())
-				? PortfolioEffect.analyzeViaUrl(title, "mix", new String[]{"n/a"}, content, portfolio, aiUrl, apiKey)
-				: PortfolioEffect.analyze(title, "mix", new String[]{"n/a"}, content, portfolio, apiKey);
+		String json = PortfolioEffect.analyze(title, "mix", new String[]{"n/a"}, content, portfolio, apiKey);
 		System.out.println(json);
 
 		try {
