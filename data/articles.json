@@ -1,3 +1,10 @@
 {
-    
+  "CNBC" : {
+    "headline" : "Here are the 4 big things we're watching in the stock market this week",
+    "content" : "Got a confidential news tip? We want to hear from you.\n\nSign up for free newsletters and get more CNBC delivered to your inbox\n\nGet this delivered to your inbox, and more info about our products and services.\n\n© 2025 Versant Media, LLC. All Rights Reserved. A Versant Media Company.\n\nData is a real-time snapshot *Data is delayed at least 15 minutes. Global Business and Financial News, Stock Quotes, and Market Data and Analysis.\n\nData also provided by"
+  },
+  "NovaNews" : {
+    "headline" : "Fahmy Macro Wire",
+    "content" : "Sample NovaNews content (no content extracted)."
+  }
 }
