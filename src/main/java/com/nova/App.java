@@ -1,27 +1,29 @@
 package com.nova;
 
-import com.nova.parsing.Scraper;
-import com.nova.logic.PortfolioEffect;
-
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.nova.logic.PortfolioEffect;
+import com.nova.logic.Welcome;
+import com.nova.parsing.Scraper;
 
 public class App {
 	public static void main(String[] args) {
-		String portfolio = args.length > 0 ? args[0] : "";
-		String apiKey = args.length > 1 ? args[1] : "";
+		Scanner sc = new Scanner(System.in);
 
-		if (portfolio.isBlank()) {
-			System.out.print("Enter tickers (AAPL,MSFT,...): ");
-			Scanner sc = new Scanner(System.in);
-			portfolio = sc.hasNextLine() ? sc.nextLine().trim() : "";
-			if (portfolio.isBlank()) {
-				System.out.println("No tickers given.");
-				return;
-			}
-		}
+		System.out.print("Enter tickers (AAPL,MSFT,...): ");
+		String portfolio = sc.nextLine().trim();
+
+		System.out.print("Enter API key (optional): ");
+		String apiKey = sc.nextLine().trim();
+
+		System.out.print("Enter AI endpoint URL (optional): ");
+		String aiUrl = sc.nextLine().trim();
+
+		try { Welcome.saveEnv(apiKey, portfolio, aiUrl); } catch (Exception ignored) {}
 
 		System.out.println("Fetching...");
 		Map<String, Map<String, String>> articles = Scraper.runAll();
@@ -29,34 +31,36 @@ public class App {
 		Map<String,String> nova = articles.get("NovaNews");
 		Map<String,String> cnbc = articles.get("CNBC");
 
-		String title = "No article";
-		String content = "Nothing.";
-		if (nova != null) {
-			title = nova.getOrDefault("headline","Nova");
-			content = nova.getOrDefault("content","");
-		}
-		if (cnbc != null) {
-			title = title + " / " + cnbc.getOrDefault("headline","CNBC");
-			content = content + "\n\n" + cnbc.getOrDefault("content","");
-		}
+		String title = nova.get("headline") + " / " + cnbc.get("headline");
+		String content = nova.get("content") + "\n\n" + cnbc.get("content");
 
-		String json = PortfolioEffect.analyze(title, "mix", new String[]{"n/a"}, content, portfolio, apiKey);
+		String json = (aiUrl != null && !aiUrl.isBlank())
+				? PortfolioEffect.analyzeViaUrl(title, "mix", new String[]{"n/a"}, content, portfolio, aiUrl, apiKey)
+				: PortfolioEffect.analyze(title, "mix", new String[]{"n/a"}, content, portfolio, apiKey);
 		System.out.println(json);
 
-		// pick highest sentiment >= 0.6
+		try {
+			Path dir = Path.of(System.getProperty("user.dir"), "data");
+			Files.createDirectories(dir);
+			Files.writeString(dir.resolve("analysis.json"), json, StandardCharsets.UTF_8);
+		} catch (Exception ignored) {}
+
 		double best = -1.0;
 		String bestTk = null;
-		Matcher m = Pattern.compile("\"([^\"]+)\"\\s*:\\s*([0-9.]+)").matcher(json);
-		while (m.find()) {
-			String tk = m.group(1);
-			double val = 0.0;
-			try { val = Double.parseDouble(m.group(2)); } catch (Exception ignored) {}
-			if (val > best) { best = val; bestTk = tk; }
+		String s = json.trim();
+		if (s.startsWith("{") && s.endsWith("}")) {
+			String inner = s.substring(1, s.length()-1).trim();
+			for (String part : inner.split(",")) {
+				String p = part.trim();
+				int colon = p.indexOf(':');
+				String k = p.substring(0, colon).trim();
+				if (k.startsWith("\"") && k.endsWith("\"") && k.length() >= 2) k = k.substring(1, k.length()-1);
+				double v = Double.parseDouble(p.substring(colon+1).trim());
+				if (v > best) { best = v; bestTk = k; }
+			}
 		}
-		if (bestTk != null && best >= 0.6) {
-			System.out.println("=== NOTIFICATION: BUY " + bestTk + " ===");
-		} else {
-			System.out.println("=== NOTIFICATION: NO ACTION ===");
-		}
+
+		if (best >= 0.6) System.out.println("=== NOTIFICATION: BUY " + bestTk + " ===");
+		else System.out.println("=== NOTIFICATION: NO ACTION ===");
 	}
 }

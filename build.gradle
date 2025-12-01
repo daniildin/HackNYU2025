@@ -23,7 +23,11 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+	// Use your locally installed JDK; no toolchain download required
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.named('run') {
+	standardInput = System.in
 }
