@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Scraper {
-        @SuppressWarnings("UseSpecificCatch")
 	public static Map<String, Map<String, String>> runAll() {
 		Map<String, Map<String, String>> combined = new HashMap<>();
 		Map<String, String> nova = NovaNewsScraper.fetch();

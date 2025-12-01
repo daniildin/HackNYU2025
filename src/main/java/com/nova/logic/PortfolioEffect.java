@@ -27,17 +27,7 @@ public class PortfolioEffect {
 
 	private static String localAnalyze(String title, String content, String portfolio) {
 		String all = (title + " " + content).toLowerCase();
-		String[] pos = {"up","gain","gains","rise","rose","surge","beat","strong","growth","profit","record","upgrade"};
-		String[] neg = {"down","loss","losses","drop","fell","miss","weak","decline","slump","downgrade"};
-
-		int p=0, n=0;
-		for (String w : all.split("\\s+")) {
-			for (String x : pos) if (w.equals(x)) p++;
-			for (String x : neg) if (w.equals(x)) n++;
-		}
-		double base = 0.5 + 0.5 * ((double)(p - n) / Math.max(1, p + n));
-		if (base < 0) base = 0;
-		if (base > 1) base = 1;
+		double base = baseSentiment(all);
 
 		StringBuilder out = new StringBuilder();
 		out.append("{");
@@ -56,14 +46,29 @@ public class PortfolioEffect {
 		return out.toString();
 	}
 
+	private static double baseSentiment(String text) {
+		String[] pos = {"up","gain","gains","rise","rose","surge","beat","strong","growth","profit","record","upgrade"};
+		String[] neg = {"down","loss","losses","drop","fell","miss","weak","decline","slump","downgrade"};
+
+		int p=0, n=0;
+		for (String w : text.split("\\s+")) {
+			for (String x : pos) if (w.equals(x)) p++;
+			for (String x : neg) if (w.equals(x)) n++;
+		}
+		double base = 0.5 + 0.5 * ((double)(p - n) / Math.max(1, p + n));
+		if (base < 0) base = 0;
+		if (base > 1) base = 1;
+		return base;
+	}
+
 	private static String callGemini(String portfolio, String title, String content, String apiKey) throws Exception {
 		// Minimal prompt: ask for only JSON mapping of provided tickers to [0,1] floats
 		String instructions =
 				"Return ONLY a JSON object mapping these tickers to sentiment floats in [0,1]. " +
 				"1. 1.0=most optimistic (price up), 0.0=most pessimistic (price down). " +
 				"2. Use only these tickers: " + portfolio + ". " +
-				"Example: {\"AAPL\":0.73,\"MSFT\":0.61}. " +
-				"Title: " + title + "\nContent:\n" + content;
+				"Example: {\\\"AAPL\\\":0.73,\\\"MSFT\\\":0.61}. " +
+				"Title: " + title + "\\nContent:\\n" + content;
 
 		String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key="
 				+ URLEncoder.encode(apiKey, StandardCharsets.UTF_8);
@@ -82,8 +87,7 @@ public class PortfolioEffect {
 		String textField = extractBetween(resp, "\"text\":\"", "\"");
 		if (textField == null || textField.isEmpty()) return null;
 		textField = textField.replace("\\n","\n").replace("\\\"","\"");
-		String json = extractFirstJson(textField);
-		return json;
+		return extractFirstJson(textField);
 	}
 
 	private static String extractBetween(String src, String start, String end) {
