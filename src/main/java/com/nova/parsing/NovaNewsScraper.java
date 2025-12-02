@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class NovaNewsScraper {
+        @SuppressWarnings("UseSpecificCatch")
 	public static Map<String,String> fetch() {
 		Map<String,String> m = new HashMap<>();
 		m.put("url","https://portfolio-news-mock.vercel.app/");
@@ -67,8 +68,14 @@ public class NovaNewsScraper {
 		int i = raw.indexOf(label);
 		if (i < 0) return;
 		int start = i + label.length();
-		int nextSep = raw.indexOf("·", start);
-		String val = (nextSep >= 0 ? raw.substring(start, nextSep) : raw.substring(start)).trim();
+		// Take full remainder for Sentiment so multiple tickers are preserved (e.g., "NVDA 0.82 · PAL 0.91")
+		String val;
+		if ("Sentiment:".equals(label)) {
+			val = raw.substring(start).trim();
+		} else {
+			int nextSep = raw.indexOf("·", start);
+			val = (nextSep >= 0 ? raw.substring(start, nextSep) : raw.substring(start)).trim();
+		}
 		if (!val.isEmpty()) m.put(key, val);
 	}
 }

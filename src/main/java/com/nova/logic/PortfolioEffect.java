@@ -16,7 +16,9 @@ public class PortfolioEffect {
 		// Try Gemini if API key provided
 		if (apiKey != null && !apiKey.isBlank() && !tickers.isBlank()) {
 			try {
-				String ai = callGemini(tickers, title, content, apiKey);
+				// Trim overly long content to keep prompt focused
+				String trimmed = content.length() > 4000 ? content.substring(0, 4000) : content;
+				String ai = callGemini(tickers, title, trimmed, apiKey);
 				if (ai != null && ai.trim().startsWith("{")) return ai.trim();
 			} catch (Exception ignored) {}
 		}
@@ -62,13 +64,16 @@ public class PortfolioEffect {
 	}
 
 	private static String callGemini(String portfolio, String title, String content, String apiKey) throws Exception {
-		// Minimal prompt: ask for only JSON mapping of provided tickers to [0,1] floats
+		// The content is expected to contain two sections marked by:
+		// --- NovaNews ---  and  --- CNBC ---
 		String instructions =
-				"Return ONLY a JSON object mapping these tickers to sentiment floats in [0,1]. " +
-				"1. 1.0=most optimistic (price up), 0.0=most pessimistic (price down). " +
-				"2. Use only these tickers: " + portfolio + ". " +
-				"Example: {\\\"AAPL\\\":0.73,\\\"MSFT\\\":0.61}. " +
-				"Title: " + title + "\\nContent:\\n" + content;
+				"You will be given two sections: NovaNews and CNBC.\n" +
+				"Output ONLY a JSON object mapping THESE tickers to floats in [0,1]: " + portfolio + ".\n" +
+				"- 1.0 = most optimistic (price up); 0.0 = most pessimistic (price down).\n" +
+				"- If a ticker is not supported by the content, use neutral 0.5.\n" +
+				"- Consider both sections. Do not invent tickers. Do not add extra text.\n\n" +
+				"Title: " + title + "\n\n" +
+				"Sections:\n" + content;
 
 		String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key="
 				+ URLEncoder.encode(apiKey, StandardCharsets.UTF_8);

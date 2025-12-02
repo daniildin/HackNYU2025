@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class CNBCScraper {
+        @SuppressWarnings("UseSpecificCatch")
 	public static Map<String,String> fetch() {
 		Map<String,String> m = new HashMap<>();
 		try {
@@ -30,12 +31,19 @@ public class CNBCScraper {
 			if (h != null) m.put("headline", h.text().trim());
 
 			StringBuilder sb = new StringBuilder();
-			for (Element p : art.select("div.ArticleBody-articleBody p, article p, p")) {
+			for (Element p : art.select("div.ArticleBody-articleBody p, article p")) {
 				String t = p.text().trim();
-				if (!t.isEmpty()) {
-					if (sb.length()>0) sb.append("\n\n");
-					sb.append(t);
+				if (t.isEmpty()) continue;
+				// Skip boilerplate/disclaimer blocks
+				String tl = t.toLowerCase();
+				if (tl.startsWith("click here") || tl.startsWith("sign up") || tl.startsWith("questions for cramer")
+						|| tl.startsWith("want to take a deep dive") || tl.startsWith("questions, comments")
+						|| tl.startsWith("got a confidential news tip") || tl.startsWith("sign up for free newsletters")
+						|| tl.startsWith("data is a real-time snapshot") || tl.startsWith("© ")) {
+					continue;
 				}
+				if (sb.length()>0) sb.append("\n\n");
+				sb.append(t);
 			}
 			if (sb.length()>0) m.put("content", sb.toString());
 
