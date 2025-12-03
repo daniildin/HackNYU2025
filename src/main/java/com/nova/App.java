@@ -33,7 +33,7 @@ public class App {
 		System.out.print("Enter API key (optional): ");
 		String apiKey = sc.nextLine().trim();
 
-		// Save .env for next run (API key + tickers only)
+		
 		try { Welcome.saveEnv(apiKey, portfolio); } catch (Exception ignored) {}
 
 		System.out.println("Fetching...");
@@ -46,7 +46,7 @@ public class App {
 
 		String aiJson = PortfolioEffect.analyze(title, "mix", new String[]{"n/a"}, content, portfolio, apiKey);
 
-		// Blend AI and Nova sentiments: average when both exist; otherwise use whichever is present
+	
 		Map<String, Double> aiMap = parseAnalyzerJson(aiJson);
 		Map<String, Double> novaSent = parseNovaSentiment(nova.getOrDefault("sentiment",""));
 		Map<String, Double> finalMap = blendMaps(aiMap, novaSent);
@@ -60,7 +60,7 @@ public class App {
 			Files.writeString(dir.resolve("analysis.json"), json, StandardCharsets.UTF_8);
 		} catch (Exception ignored) {}
 
-		// CHANGED: collect all tickers >= 0.6, sorted desc
+		
 		java.util.List<Map.Entry<String, Double>> sorted = new java.util.ArrayList<>(finalMap.entrySet());
 		sorted.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
 
@@ -80,7 +80,7 @@ public class App {
 		}
 	}
 
-	// --- helpers (unchanged) ---
+	
         @SuppressWarnings("UseSpecificCatch")
 	private static Map<String, Double> parseAnalyzerJson(String json) {
 		Map<String, Double> out = new HashMap<>();
@@ -150,7 +150,7 @@ public class App {
 			} else {
 				val = (a != null) ? a : n;
 			}
-			// clamp and round to 2 decimals
+			
 			if (val < 0) val = 0;
 			if (val > 1) val = 1;
 			val = Math.round(val * 100.0) / 100.0;
