@@ -4,7 +4,7 @@ Simple Java app that:
 - Scrapes the latest article from your Nova site and CNBC
 - Sends the combined text to AI (Gemini) or uses a tiny local heuristic
 - Gets per-ticker sentiment in [0..1] (1 = most optimistic, 0 = most pessimistic)
-- Prints a BUY/NO ACTION based on the highest sentiment and saves results to data/
+- Blends AI scores with Nova inline sentiment, lists all BUY tickers (score ≥ 0.6), and saves results to data/
 
 ## Tech stack
 
@@ -35,7 +35,7 @@ What to enter when prompted:
 Non-interactive example:
 ./gradlew run --args "NVDA,PAL YOUR_GEMINI_API_KEY"
 
-## What it does
+## Step-by-Step Process
 
 1) Scrape
 - NovaNews (homepage first article card):
@@ -55,11 +55,14 @@ Non-interactive example:
   - Tiny positive/negative word list determines a base score in [0..1]
   - Mentioned tickers get base; unmentioned tickers get neutral 0.5
 
-3) Decide
-- If the highest sentiment >= 0.6 → BUY that ticker
+3) Blend
+- Parse Nova's inline "Sentiment:" string and average it with AI scores per ticker (clamped to [0..1]).
+
+4) Decide
+- If any ticker's final score ≥ 0.6 → list all as BUY (sorted by score)
 - Else → NO ACTION
 
-4) Save
+5) Save
 - data/articles.json: the scraped snapshot (simple JSON string)
 - data/analysis.json: the sentiment result JSON
 - .env: convenience (GEMINI_API_KEY, PORTFOLIO_TICKERS)
@@ -85,8 +88,8 @@ Non-interactive example:
   - Tickers: NVDA,PAL
   - API key: <your key> (or blank to use local)
 - Output (console):
-  {"NVDA":0.82,"PAL":0.91}
-  === NOTIFICATION: BUY NVDA ===
+  {"NVDA":0.71,"PAL":0.66}
+  === NOTIFICATION: BUY === NVDA (0.71), PAL (0.66)
 
 Files created:
 - data/articles.json
