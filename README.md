@@ -110,3 +110,21 @@ Files created:
 - Sentiment is about stock price outlook (0..1), not ethics/morality.
 - Keep the API key private; it’s stored in .env for convenience.
 - Improve later: full-article Nova fetch, better JSON parsing, retries, tests, richer sentiment model.
+
+## Sequence Diagram
+
+```mermaid
+sequenceDiagram
+User → App      : enter tickers, API key
+App  → Welcome  : saveEnv(.env)
+App  → Scraper  : runAll()
+Scraper → Nova  : fetch()
+Scraper → CNBC  : fetch()
+Scraper → FS    : write data/articles.json
+App  → PortfolioEffect : analyze(title, content, tickers, apiKey)
+PortfolioEffect → Gemini? : callGemini() [else localAnalyze]
+Gemini → PortfolioEffect : JSON scores
+PortfolioEffect → App    : AI JSON
+App : blend(AI, Nova sentiment) → decide(≥0.6)
+App → Console/FS : BUY list + data/analysis.json
+```
